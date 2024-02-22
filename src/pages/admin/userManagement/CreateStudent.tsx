@@ -6,7 +6,8 @@ import PHSelect from "../../../components/form/PHSelect";
 import { bloodGroupOptions, genderOptions } from "../../../types";
 import PHDatePicker from "../../../components/form/PHDatePicker";
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
-import Item from "antd/es/list/Item";
+import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+
 
 const studentDummyData = {
   password: "student123",
@@ -83,22 +84,35 @@ const studentDefaultValues = {
 };
 
 const CreateStudent = () => {
+  const [addStudent] = useAddStudentMutation();
   const { data: sData, isLoading: sIsLoading } =
     useGetAllSemestersQuery(undefined);
+
+  const {data:dData, isLoading:dIsLoading} = useGetAllSemestersQuery(undefined)
 
   const semesterOptions = sData?.data?.map((Item) => ({
     value: Item._id,
     label: `${Item.name}${Item.year}`,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+  const departmentOption = dData?.data?.map((Item)=>({
+    value:Item._id,
+    label:Item.name,
+  }))
 
-    // const formData = new FormData();
-    // formData.append("data", JSON.stringify(data));
+  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const studentData = {
+      password:'student123',
+      student:data,
+    }
+
+    const formData = new FormData();
+    formData.append("data", JSON.stringify(studentData));
+
+    addStudent(formData);
     // this is for development
     // just for checking
-    // console.log(Object.fromEntries(formData));
+    console.log(Object.fromEntries(formData));
   };
   return (
     <Row>
@@ -240,14 +254,15 @@ const CreateStudent = () => {
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHSelect
                 options={semesterOptions}
-                disable={sIsLoading}
+                disabled={sIsLoading}
                 name="admissionSemester"
                 label="admission Semester"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHSelect
-                options={}
+                options={departmentOption}
+                disabled={dIsLoading}
                 name="academicDepartment"
                 label="academicDepartment"
               />
