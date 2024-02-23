@@ -6,12 +6,18 @@ import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManage
 export type TTableData = Pick<TStudent, "name" | "id">;
 
 const StudentData = () => {
-  const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
+  const [params, setParams] = useState<TQueryParam[]>([]);
+  const [page, setPage] = useState(1)
   const {
     data: studentData,
     isLoading,
     isFetching,
-  } = useGetAllStudentsQuery(params);
+  } = useGetAllStudentsQuery([
+    { name: "limit", value: 3 },
+    { name: "page", value: page },
+    {name:'sort', value:"id"},
+    ...params,
+  ]);
 
   console.log({ isLoading, isFetching });
 
@@ -45,7 +51,7 @@ const StudentData = () => {
           </Space>
         );
       },
-      width:"10%"
+      width: "10%",
     },
   ];
 
