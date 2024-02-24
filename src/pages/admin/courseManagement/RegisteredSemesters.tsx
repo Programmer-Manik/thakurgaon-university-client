@@ -1,7 +1,8 @@
 import { Button, Dropdown, Table, TableColumnsType, Tag } from "antd";
-import { useGetAllRegisteredSemestersQuery } from "../../../redux/features/admin/courseManagement.api";
+import { useGetAllRegisteredSemestersQuery, useUpdateRegisterSemesterMutation } from "../../../redux/features/admin/courseManagement.api";
 import moment from "moment";
 import { tSemester } from "../../../types";
+import { useState } from "react";
 
 export type TTableData = Pick<tSemester, "startDate" | "endDate" | "status">;
 
@@ -22,12 +23,16 @@ const items = [
 
 
 const RegisteredSemesters = () => {
+  const [semesterId , setSemesterId] = useState('')
   // const [params, setParams] = useState<TQueryParam[] | undefined>(undefined);
+
 
   const {
     data: semesterData,
     isFetching,
   } = useGetAllRegisteredSemestersQuery(undefined);
+
+const {updateSemesterStatus} = useUpdateRegisterSemesterMutation()
 
   const tableData = semesterData?.data?.map(
     ({ _id, academicSemester, startDate, endDate, status }) => ({
@@ -39,12 +44,20 @@ const RegisteredSemesters = () => {
     })
   );
 
-  const handleStatusDropdown  = (data) => {
-    console.log(data)
+  const handleStatusUpdate  = (data) => {
+    console.log('semester', semesterId)
+    console.log('newStatus', data.key)
+    const updateDate = {
+      id:semesterId,
+      data:{
+        status:data.key
+      },
+    };
+    updateSemesterStatus(updateDate)
   }
   const menuProps = {
-    items, handleStatusDropdown,
-    onclick:handleStatusDropdown,
+    items, handleStatusUpdate,
+    onclick:handleStatusUpdate,
   }
 
   const columns: TableColumnsType<TTableData> = [
@@ -84,10 +97,10 @@ const RegisteredSemesters = () => {
     {
       title: "Action",
       key: "x",
-      render: () => {
+      render: (item) => {
         return (
-          <Dropdown menu={menuProps}>
-            <Button>Update</Button>
+          <Dropdown menu={menuProps} trigger={['click']}>
+            <Button onClick={() => setSemesterId(item.key)}>Update</Button>
           </Dropdown>
         );
       },
