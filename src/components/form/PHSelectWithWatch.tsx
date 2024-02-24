@@ -1,5 +1,5 @@
 import { Form, Select } from "antd";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, } from "react-hook-form";
 type TPHSelectProps = {
   label: string;
   name: string;
@@ -7,13 +7,8 @@ type TPHSelectProps = {
   disabled?: boolean;
   mode?: "multiple" | undefined;
 };
-const PHSelect = ({ mode, label, name, options, disabled }: TPHSelectProps) => {
-  const {control} = useFormContext()
-  const inputValue = useWatch({
-    control,
-    name,
-  });
-  console.log(inputValue)
+const PHSelectWithWatch = ({ mode, label, name, options, disabled }: TPHSelectProps) => {
+
   return (
     <Controller
       name={name}
@@ -33,4 +28,4 @@ const PHSelect = ({ mode, label, name, options, disabled }: TPHSelectProps) => {
     />
   );
 };
-export default PHSelect;
+export default PHSelectWithWatch;
