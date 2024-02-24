@@ -3,8 +3,12 @@ import PHForm from "../../../components/form/PHForm";
 import PHInput from "../../../components/form/PHInput";
 import { useGetAcademicFacultiesQuery } from "../../../redux/features/admin/academicManagement.api";
 import PHSelectWithWatch from "../../../components/form/PHSelectWithWatch";
+import { useState } from "react";
 
 const OfferCourse = () => {
+
+  const [id, setId] = useState('')
+  console.log('inside parent components', id)
   const { data: academicFacultyData } = useGetAcademicFacultiesQuery(undefined)
 
   const AcademicSemesterOptions = academicFacultyData?.data?.map((item)=>({
@@ -20,11 +24,12 @@ const OfferCourse = () => {
       <Col span={6}>
         <PHForm onSubmit={onSubmit}>
           <PHSelectWithWatch
+            onValueChange={setId}
             label="Academic Semester"
             name="academicSemester"
             options={AcademicSemesterOptions}
           />
-          <PHInput type="text" name="test" label="test" />
+          <PHInput type="text" disabled={!id} name="test" label="test" />
           <Button htmlType="submit">submit</Button>
         </PHForm>
       </Col>
