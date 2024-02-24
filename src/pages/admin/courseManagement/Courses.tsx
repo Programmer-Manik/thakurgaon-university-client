@@ -1,5 +1,5 @@
 import { Button, Modal, Table } from "antd";
-import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
+import { useAddFacultiesMutation, useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
 import { useState } from "react";
 import PHForm from "../../../components/form/PHForm";
 import PHSelect from "../../../components/form/PHSelect";
@@ -32,7 +32,7 @@ const Courses = () => {
       title: "Action",
       key: "x",
       render: (item) => {
-        return <AddFacultyModal data={item} />;
+        return <AddFacultyModal facultyInfo={item} />;
       },
     },
   ];
@@ -60,11 +60,12 @@ const Courses = () => {
   );
 };
 
-const AddFacultyModal = (data) => {
-  console.log(data.key);
+const AddFacultyModal = ({facultyInfo}) => {
+  console.log(facultyInfo.key);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {data:facultyData} = useGetAllFacultiesQuery(undefined)
   console.log(facultyData)
+  const [addFaculties] = useAddFacultiesMutation()
 
   const facultiesOptions = facultyData?.data?.map((item) => ({
     value:item._id,
@@ -73,12 +74,17 @@ const AddFacultyModal = (data) => {
 
   const handleSubmit = (data) => {
     console.log(data)
+    const facultyData = {
+      courseId:facultyInfo.key,
+      data,
+    }
+    addFaculties(facultyData)
   }
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleCancel = () => {
     setIsModalOpen(false);
   };
 
@@ -87,7 +93,11 @@ const AddFacultyModal = (data) => {
       <Button type="primary" onClick={showModal}>
         Open Modal
       </Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk}>
+      <Modal
+        title="Basic Modal" 
+        open={isModalOpen}
+        footer={null} 
+        onCancel={handleCancel}>
         <PHForm onSubmit={handleSubmit}>
           <PHSelect
             mode='multiple'  
@@ -99,7 +109,7 @@ const AddFacultyModal = (data) => {
         </PHForm>
       </Modal>
     </>
-  );
+  )
 };
 
 export default Courses;
