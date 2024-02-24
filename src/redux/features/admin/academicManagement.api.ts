@@ -1,6 +1,6 @@
-import { TQueryParam, TResponseRedux } from '../../../types';
-import { TAcademicSemester } from '../../../types/academicManagement.type';
-import { baseApi } from '../../api/baseApi';
+import { TQueryParam, TResponseRedux } from "../../../types";
+import { TAcademicSemester } from "../../../types/academicManagement.type";
+import { baseApi } from "../../api/baseApi";
 
 const academicManagementApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -16,8 +16,8 @@ const academicManagementApi = baseApi.injectEndpoints({
         }
 
         return {
-          url: '/academic-semesters',
-          method: 'GET',
+          url: "/academic-semesters",
+          method: "GET",
           params: params,
         };
       },
@@ -30,13 +30,40 @@ const academicManagementApi = baseApi.injectEndpoints({
     }),
     addAcademicSemester: builder.mutation({
       query: (data) => ({
-        url: '/academic-semesters/create-academic-semester',
-        method: 'POST',
+        url: "/academic-semesters/create-academic-semester",
+        method: "POST",
         body: data,
       }),
     }),
+
+    // getAcademicFaculties: builder.query({
+    //   query: () => {
+    //     return {
+    //       url: "/academic-faculties",
+    //       method: "GET",
+    //     };
+    //   },
+    //   transformResponse: (response: TResponseRedux<TAcademicSemester[]>) => {
+    //     return {
+    //       data: response.data,
+    //       meta: response.meta,
+    //     };
+    //   },
+    // }),
+
+    // addAcademicFaculties: builder.mutation({
+    //   query: (data) => ({
+    //     url: "/academic-faculties/create-academic-faculties",
+    //     method: "POST",
+    //     body: data,
+    //   }),
+    // }),
   }),
 });
 
-export const { useGetAllSemestersQuery, useAddAcademicSemesterMutation } =
-  academicManagementApi;
+export const {
+  // useAddAcademicFacultiesMutation,
+  // useGetAcademicFacultiesQuery,
+  useGetAllSemestersQuery,
+  useAddAcademicSemesterMutation,
+} = academicManagementApi;
