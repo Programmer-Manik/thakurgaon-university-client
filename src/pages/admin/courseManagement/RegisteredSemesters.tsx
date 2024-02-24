@@ -32,7 +32,7 @@ const RegisteredSemesters = () => {
     isFetching,
   } = useGetAllRegisteredSemestersQuery(undefined);
 
-const {updateSemesterStatus} = useUpdateRegisterSemesterMutation()
+const [updateSemesterStatus] = useUpdateRegisterSemesterMutation()
 
   const tableData = semesterData?.data?.map(
     ({ _id, academicSemester, startDate, endDate, status }) => ({
