@@ -1,6 +1,6 @@
-import { TAcademicDepartment, TAcademicFaculty, TAcademicSemester } from ".";
+import { TAcademicDepartment, TAcademicFaculty, TAcademicSemester } from '.';
 
-export type TStudent = {
+export interface TStudent {
   _id: string;
   id: string;
   user: TUser;
@@ -12,12 +12,13 @@ export type TStudent = {
   emergencyContactNo: string;
   bloogGroup: string;
   presentAddress: string;
+  permanentAddress: string;
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   profileImg: string;
   admissionSemester: TAcademicSemester;
   isDeleted: boolean;
-  academicDepartment:TAcademicDepartment;
+  academicDepartment: TAcademicDepartment;
   academicFaculty: TAcademicFaculty;
   fullName: string;
 }
@@ -32,7 +33,7 @@ export type TUser = {
   isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
-  _v: number;
+  __v: number;
 };
 
 export type TName = {
@@ -51,6 +52,7 @@ export type TGuardian = {
   motherContactNo: string;
   _id: string;
 };
+
 export type TLocalGuardian = {
   name: string;
   occupation: string;
@@ -58,4 +60,3 @@ export type TLocalGuardian = {
   address: string;
   _id: string;
 };
-

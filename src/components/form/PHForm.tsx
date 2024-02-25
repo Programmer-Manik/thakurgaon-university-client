@@ -35,11 +35,10 @@ const PHForm = ({
 
   const methods = useForm(formConfig);
 
-  const submit :SubmitHandler<FieldValues> = (data) => {
+  const submit: SubmitHandler<FieldValues> = (data) => {
     onSubmit(data);
     methods.reset();
-   
-  }
+  };
 
   return (
     <FormProvider {...methods}>

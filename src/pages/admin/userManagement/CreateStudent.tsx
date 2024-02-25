@@ -1,250 +1,298 @@
-import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
-import PHForm from "../../../components/form/PHForm";
-import PHInput from "../../../components/form/PHInput";
-import { Button, Col, Divider, Form, Input, Row } from "antd";
-import PHSelect from "../../../components/form/PHSelect";
-import { bloodGroupOptions, genderOptions } from "../../../types";
-import PHDatePicker from "../../../components/form/PHDatePicker";
-import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
-import { useAddStudentMutation } from "../../../redux/features/admin/userManagement.api";
+import { Controller, FieldValues, SubmitHandler } from 'react-hook-form';
+import PHForm from '../../../components/form/PHForm';
+import PHInput from '../../../components/form/PHInput';
+import { Button, Col, Divider, Form, Input, Row } from 'antd';
+import PHSelect from '../../../components/form/PHSelect';
+import { bloodGroupOptions, genderOptions } from '../../../constants/global';
+import PHDatePicker from '../../../components/form/PHDatePicker';
+import {
+  useGetAcademicDepartmentsQuery,
+  useGetAllSemestersQuery,
+} from '../../../redux/features/admin/academicManagement.api';
+import { useAddStudentMutation } from '../../../redux/features/admin/userManagement.api';
 
+const studentDummyData = {
+  password: 'student123',
+  student: {
+    name: {
+      firstName: 'I am ',
+      middleName: 'Student',
+      lastName: 'Number 1',
+    },
+    gender: 'male',
+    dateOfBirth: '1990-01-01',
+    bloogGroup: 'A+',
 
-// this is only for development
-//should be removed
+    email: 'student3@gmail.com',
+    contactNo: '1235678',
+    emergencyContactNo: '987-654-3210',
+    presentAddress: '123 Main St, Cityville',
+    permanentAddress: '456 Oak St, Townsville',
+
+    guardian: {
+      fatherName: 'James Doe',
+      fatherOccupation: 'Engineer',
+      fatherContactNo: '111-222-3333',
+      motherName: 'Mary Doe',
+      motherOccupation: 'Teacher',
+      motherContactNo: '444-555-6666',
+    },
+
+    localGuardian: {
+      name: 'Alice Johnson',
+      occupation: 'Doctor',
+      contactNo: '777-888-9999',
+      address: '789 Pine St, Villageton',
+    },
+
+    admissionSemester: '65bb60ebf71fdd1add63b1c0',
+    academicDepartment: '65b4acae3dc8d4f3ad83e416',
+  },
+};
+
+//! This is only for development
+//! Should be removed
 const studentDefaultValues = {
   name: {
-    firstName: "I am ",
-    middleName: "Student",
-    lastName: "Number 1",
+    firstName: 'I am ',
+    middleName: 'Student',
+    lastName: 'Number 1',
   },
-  gender: "male",
-  bloogGroup: "A+",
+  gender: 'male',
 
-  email: "student2@gmail.com",
-  contactNo: "1235678",
-  emergencyContactNo: "987-654-3210",
-  presentAddress: "123 Main St, Cityville",
-  permanentAddress: "456 Oak St, Townsville",
+  bloogGroup: 'A+',
+
+  contactNo: '1235678',
+  emergencyContactNo: '987-654-3210',
+  presentAddress: '123 Main St, Cityville',
+  permanentAddress: '456 Oak St, Townsville',
 
   guardian: {
-    fatherName: "James Doe",
-    fatherOccupation: "Engineer",
-    fatherContactNo: "111-222-3333",
-    motherName: "Mary Doe",
-    motherOccupation: "Teacher",
-    motherContactNo: "444-555-6666",
-  },
-  localGuardian: {
-    name: "Alice Johnson",
-    occupation: "Doctor",
-    contactNo: "777-888-9999",
-    address: "789 Pine St, Villageton",
+    fatherName: 'James Doe',
+    fatherOccupation: 'Engineer',
+    fatherContactNo: '111-222-3333',
+    motherName: 'Mary Doe',
+    motherOccupation: 'Teacher',
+    motherContactNo: '444-555-6666',
   },
 
-  admissionSemester: "65b0104110b74fcbd7a25d92",
-  academicDepartment: "65b00fb010b74fcbd7a25d8e",
+  localGuardian: {
+    name: 'Alice Johnson',
+    occupation: 'Doctor',
+    contactNo: '777-888-9999',
+    address: '789 Pine St, Villageton',
+  },
+
+  admissionSemester: '65bb60ebf71fdd1add63b1c0',
+  academicDepartment: '65b4acae3dc8d4f3ad83e416',
 };
 
 const CreateStudent = () => {
-  const [addStudent] = useAddStudentMutation();
+  const [addStudent, { data, error }] = useAddStudentMutation();
+
+  console.log({ data, error });
+
   const { data: sData, isLoading: sIsLoading } =
     useGetAllSemestersQuery(undefined);
 
-  const {data:dData, isLoading:dIsLoading} = useGetAllSemestersQuery(undefined)
+  const { data: dData, isLoading: dIsLoading } =
+    useGetAcademicDepartmentsQuery(undefined);
 
-  const semesterOptions = sData?.data?.map((Item) => ({
-    value: Item._id,
-    label: `${Item.name}${Item.year}`,
+  const semesterOptions = sData?.data?.map((item) => ({
+    value: item._id,
+    label: `${item.name} ${item.year}`,
   }));
 
-  const departmentOption = dData?.data?.map((Item)=>({
-    value:Item._id,
-    label:Item.name,
-  }))
+  const departmentOptions = dData?.data?.map((item) => ({
+    value: item._id,
+    label: item.name,
+  }));
 
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     const studentData = {
-      password:'student123',
-      student:data,
-    }
+      password: 'student123',
+      student: data,
+    };
 
     const formData = new FormData();
-    formData.append("data", JSON.stringify(studentData));
-    formData.append('file', data.image)
+
+    formData.append('data', JSON.stringify(studentData));
+    formData.append('file', data.image);
 
     addStudent(formData);
 
-    
-    // this is for development
-    // just for checking
+    //! This is for development
+    //! Just for checking
     console.log(Object.fromEntries(formData));
   };
+
   return (
-    <Row>
+    <Row justify="center">
       <Col span={24}>
         <PHForm onSubmit={onSubmit} defaultValues={studentDefaultValues}>
-          <Divider>Personal info</Divider>
+          <Divider>Personal Info.</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="name.firstName" label="first Name" />
+              <PHInput type="text" name="name.firstName" label="First Name" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="name.middleName" label="middle Name" />
+              <PHInput type="text" name="name.middleName" label="Middle Name" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="name.lastName" label="last Name" />
+              <PHInput type="text" name="name.lastName" label="Last Name" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHSelect options={genderOptions} name="gender" label="gender" />
+              <PHSelect options={genderOptions} name="gender" label="Gender" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHDatePicker name="dateOfBirth" label="date Of Birth" />
+              <PHDatePicker name="dateOfBirth" label="Date of birth" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHSelect
                 options={bloodGroupOptions}
                 name="bloogGroup"
-                label="bloog Group"
+                label="Blood group"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <Controller
-              name="image"
-              render={({field:{onChange, value,...field}}) => 
-                <Form.Item label="Picture">
-                  <Input type="file" value={value?.fileName} {...field} onChange={(e)=> onChange(e.target.files?.[0])} />
-                </Form.Item>
-              }
+                name="image"
+                render={({ field: { onChange, value, ...field } }) => (
+                  <Form.Item label="Picture">
+                    <Input
+                      type="file"
+                      value={value?.fileName}
+                      {...field}
+                      onChange={(e) => onChange(e.target.files?.[0])}
+                    />
+                  </Form.Item>
+                )}
               />
             </Col>
           </Row>
-
-          <Divider>contact info</Divider>
+          <Divider>Contact Info.</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="email" label="email" />
+              <PHInput type="text" name="email" label="Email" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="contactNo" label="contactNo" />
+              <PHInput type="text" name="contactNo" label="Contact" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="emergencyContactNo"
-                label="emergencyContactNo:"
+                label="Emergency Contact"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="presentAddress"
-                label="presentAddress"
+                label="Present Address"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="permanentAddress"
-                label="permanentAddress"
+                label="Permanent Address"
               />
             </Col>
           </Row>
-
-          <Divider>guardian info</Divider>
+          <Divider>Guardian</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.fatherName"
-                label="fatherName"
+                label="Father Name"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.fatherOccupation"
-                label="fatherOccupation"
+                label="Father Occupation"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.fatherContactNo"
-                label="fatherContactNo"
+                label="Father ContactNo"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.motherName"
-                label="motherName"
+                label="Mother Name"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.motherOccupation"
-                label="motherOccupation"
+                label="Mother Occupation"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="guardian.motherContactNo"
-                label="motherContactNo"
+                label="Mother ContactNo"
               />
             </Col>
           </Row>
-
-          <Divider>localGuardian info</Divider>
+          <Divider>Local Guardian</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PHInput type="text" name="localGuardian.name" label="name" />
+              <PHInput type="text" name="localGuardian.name" label="Name" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="localGuardian.occupation"
-                label="occupation"
+                label="Occupation"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="localGuardian.contactNo"
-                label="contactNo"
+                label="Contact No."
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHInput
                 type="text"
                 name="localGuardian.address"
-                label="address"
+                label="Address"
               />
             </Col>
           </Row>
-
-          <Divider>Academic info</Divider>
+          <Divider>Academic Info.</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHSelect
                 options={semesterOptions}
                 disabled={sIsLoading}
                 name="admissionSemester"
-                label="admission Semester"
+                label="Admission Semester"
               />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PHSelect
-                options={departmentOption}
+                options={departmentOptions}
                 disabled={dIsLoading}
                 name="academicDepartment"
-                label="academicDepartment"
+                label="Admission Department"
               />
             </Col>
           </Row>
 
-          <Button htmlType="submit">submit</Button>
+          <Button htmlType="submit">Submit</Button>
         </PHForm>
       </Col>
     </Row>

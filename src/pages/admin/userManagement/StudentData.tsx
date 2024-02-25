@@ -5,15 +5,15 @@ import {
   Table,
   TableColumnsType,
   TableProps,
-} from "antd";
-import { useState } from "react";
-import { TQueryParam, TStudent } from "../../../types";
-import { useGetAllStudentsQuery } from "../../../redux/features/admin/userManagement.api";
-import { Link } from "react-router-dom";
+} from 'antd';
+import { useState } from 'react';
+import { TQueryParam, TStudent } from '../../../types';
+import { useGetAllStudentsQuery } from '../../../redux/features/admin/userManagement.api';
+import { Link } from 'react-router-dom';
 
 export type TTableData = Pick<
   TStudent,
-  "fullName" | "id" | "email" | "contactNo"
+  'fullName' | 'id' | 'email' | 'contactNo'
 >;
 
 const StudentData = () => {
@@ -24,9 +24,8 @@ const StudentData = () => {
     isLoading,
     isFetching,
   } = useGetAllStudentsQuery([
-    //  { name: "limit", value: 3 },
-    { name: "page", value: page },
-    { name: "sort", value: "id" },
+    { name: 'page', value: page },
+    { name: 'sort', value: 'id' },
     ...params,
   ]);
 
@@ -46,29 +45,29 @@ const StudentData = () => {
 
   const columns: TableColumnsType<TTableData> = [
     {
-      title: "full Name",
-      key: "name",
-      dataIndex: "fullName",
-    },
-    {
-      title: "Roll no ",
-      key: "id",
-      dataIndex: "id",
-    },
-    {
-      title: "email",
-      key: "email",
-      dataIndex: "email",
-    },
-    {
-      title: "contact no ",
-      key: "contactNo",
-      dataIndex: "contactNo",
+      title: 'Name',
+      key: 'name',
+      dataIndex: 'fullName',
     },
 
     {
-      title: "Action",
-      key: "x",
+      title: 'Roll No.',
+      key: 'id',
+      dataIndex: 'id',
+    },
+    {
+      title: 'Email',
+      key: 'email',
+      dataIndex: 'email',
+    },
+    {
+      title: 'Contact No.',
+      key: 'contactNo',
+      dataIndex: 'contactNo',
+    },
+    {
+      title: 'Action',
+      key: 'x',
       render: (item) => {
         console.log(item);
         return (
@@ -81,25 +80,25 @@ const StudentData = () => {
           </Space>
         );
       },
-      width: "10%",
+      width: '1%',
     },
   ];
 
-  const onChange: TableProps<TTableData>["onChange"] = (
+  const onChange: TableProps<TTableData>['onChange'] = (
     _pagination,
     filters,
     _sorter,
     extra
   ) => {
-    if (extra.action === "filter") {
+    if (extra.action === 'filter') {
       const queryParams: TQueryParam[] = [];
 
       filters.name?.forEach((item) =>
-        queryParams.push({ name: "name", value: item })
+        queryParams.push({ name: 'name', value: item })
       );
 
       filters.year?.forEach((item) =>
-        queryParams.push({ name: "year", value: item })
+        queryParams.push({ name: 'year', value: item })
       );
 
       setParams(queryParams);

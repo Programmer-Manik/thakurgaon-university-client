@@ -1,15 +1,16 @@
-import { Form, TimePicker } from "antd";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from 'react-hook-form';
+import { Form, TimePicker } from 'antd';
 
-type PHTimePicker = {
+type TPHDatePicker = {
   name: string;
-  label?: string;
+  label: string;
 };
 
-const PHTimePicker = ({ name, label }: PHTimePicker) => {
-  const {control} = useFormContext()
+const PHTimePicker = ({ name, label }: TPHDatePicker) => {
+  const { control } = useFormContext();
+
   return (
-    <div style={{ marginBottom: "20px" }}>
+    <div style={{ marginBottom: '10px' }}>
       <Controller
         name={name}
         control={control}
@@ -18,11 +19,11 @@ const PHTimePicker = ({ name, label }: PHTimePicker) => {
             <Form.Item label={label}>
               <TimePicker
                 {...field}
-                style={{ width: "100%" }}
                 size="large"
+                style={{ width: '100%' }}
                 format="HH:mm"
               />
-              {error && <small style={{ color: "red" }}>{error.message}</small>}
+              {error && <small style={{ color: 'red' }}>{error.message}</small>}
             </Form.Item>
           </>
         )}

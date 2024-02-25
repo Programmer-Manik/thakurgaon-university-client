@@ -5,7 +5,7 @@ export const semesterOptions = [
 ];
 
 export const semesterStatusOptions = [
-  {value: 'UPcOMING', label:'UPcoming'},
-  {value: 'ONGOING', label:'Ongoing'},
-  {value: 'ENDED', label:'Ended'},
-]
+  { value: 'UPCOMING', label: 'Upcoming' },
+  { value: 'ONGOING', label: 'Ongoing' },
+  { value: 'ENDED', label: 'Ended' },
+];
