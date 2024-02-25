@@ -104,7 +104,7 @@ const AddFacultyModal = ({facultyInfo}) => {
             options={facultiesOptions} 
             name="faculties" 
             label="faculties"
-          >
+          />
           <Button htmlType="submit">submit</Button>
         </PHForm>
       </Modal>
